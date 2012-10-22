@@ -58,21 +58,10 @@ class plgSystemCookie extends JPlugin{
         $current = "index.php?".JURI::buildQuery($router->getVars());
 
         //sets the cookie if in defined urls
-        if($this->checkUrls($urls, $current)){
-            switch($pluginParams->get('expire')){
-                case "not_set": setcookie("plug_cookie",$current, 0, '/');
-                                break;
-                case "30"     : setcookie("plug_cookie",$current, mktime() + 60 * 60 * 24 * 30, '/');
-                                break;
-                case "90"     : setcookie("plug_cookie",$current, mktime() + 60 * 60 * 24 * 90, '/');
-                                break;
-                case "180"    : setcookie("plug_cookie",$current, mktime() + 60 * 60 * 24 * 180, '/');
-                                break;
-                case "365"    : setcookie("plug_cookie",$current, mktime() + 60 * 60 * 24 * 365, '/');
-                                break;
-                default       : setcookie("plug_cookie",$current, 0, '/');
-                                break;
-            }
+        if($this->checkUrls($urls, $current)){       	
+			$expire     = $pluginParams->get('expire');
+			$cookieTime = ( $expire == 'not_set' ? 0 : mktime() + 60 * 60 * 24 * $expire );
+			setcookie("plug_cookie",$current, $cookieTime, '/');           
         }
 
         $cookie_redirect = JRequest::getVar('plug_cookie', null ,"COOKIE");
